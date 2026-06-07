@@ -48,40 +48,24 @@
             display: flex;
             font-family: sans-serif;
             color:rgb(15, 0, 62);
-            padding: 0;
+            padding:4px;
+            gap:4px;
         }
-        
-        .input-container ul{
-            display: flex;
+
+        .input-container input{
             flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: flex-start;
-            height: 200px;
-            width: 80%;
-            gap:1rem;
-            list-style: none;
-            margin: 1rem;
-            padding: 5px;
-            background-color: rgb(0, 0, 0);
-            border-radius: 10px;
-        }
-
-        .input-container input[type="text"] {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #b866ff;
-            border-radius: 10px;
-            box-sizing: border-box; /* 幅の計算を崩さないためのおまじない */
-        }
-
-        .input-container button {
-            padding: 0.5rem 1rem;
-            background-color: rgb(15, 0, 62);
-            color: white;
-            border: none;
+            width: 45%;
+            padding: 4px;
+            
+            font-size: 16px;
+            font-family: sans-serif;
+            
+            border: 8px;
+            border-color: rgb(0, 247, 255);
             border-radius: 4px;
-            cursor: pointer;
         }
+
+        
         
 
 
@@ -95,10 +79,8 @@
     </div>
 
     <div class="input-container">
-        <ul>
-            <li class="input-field"><input type="text" id="start-level" placeholder="初期レベルの設定"></li>
-            <li class="input-field"><input type="text" id="count-level" placeholder="進行レベル数"></li>
-        </ul>
+        <input type="text" id="start-level" placeholder="初期レベルの設定">
+        <input type="text" id="level-counter" placeholder="試行回数の設定">
     </div>
 
     <script>
