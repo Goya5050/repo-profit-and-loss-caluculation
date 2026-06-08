@@ -22,12 +22,14 @@
         }
         
         .repo-char {
+            display: flex;
+            padding: 10px;
+
             font-family: "Russo One", sans-serif;
             font-weight: 400;
             font-style: normal;
+
             color:var(--logochar);
-            display: flex;
-            padding: 10px;
         }
 
         .repo-char .main-title{
@@ -52,7 +54,7 @@
             padding:1rem;
             gap:4px;
             
-            background-color: black;
+            background-color: rgb(135, 10, 10);
         }
 
         .input-container input{
@@ -61,6 +63,7 @@
             
             font-size: 16px;
             font-family: sans-serif;
+            color: coral;
             
             border: 4px solid ;
             border-color: rgb(255, 158, 2);
@@ -69,7 +72,27 @@
             background-color: black;
         }
 
-        .input-container label{
+        .select-box{
+            display: flex;
+
+            padding: 1rem;
+            gap: 4px;
+
+            background-color: rgb(19, 0, 38);
+        }
+
+        .select-set{
+            width: 34%;
+            flex-direction: column;
+            flex-wrap: wrap;
+                
+            padding: 1rem;
+            gap: 4px;
+        }
+        
+
+        .select-box label{
+            width: 100%;
 
             font-size: 16px;
             font-family: sans-serif;
@@ -77,8 +100,8 @@
             color: var(--description);
         }
 
-        .input-container select{
-            width: 32%;
+        .select-box select{
+            width: 100%;
             padding: 4px;
 
             font-family: sans-serif;
@@ -109,31 +132,42 @@
         <input type="text" id="start-level" placeholder="初期レベルの設定">
         <input type="text" id="level-counter" placeholder="試行回数の設定">
     </div>
-    <label for="weapon_1">
-        一つ目の武器
-    <div class="input-container">
-        <select name="select_weapon_1" id="weapon_1">
-            <option value="nothing" selected>選択してください</option>
-            <option value="gun">ハンドガン</option>
-            <option value="hammer">ハンマー</option>
-            <option value="photonblaster">フォトンブラスター</option>
-            <option value="baseball_bat">バット</option>
-        </select>
-        </label>
-        <select name="select_weapon_1" id="weapon_1">
-            <option value="nothing" selected>選択してください</option>
-            <option value="gun">ハンドガン</option>
-            <option value="hammer">ハンマー</option>
-            <option value="photonblaster">フォトンブラスター</option>
-            <option value="baseball_bat">バット</option>
-        </select>
-        <select name="select_weapon_1" id="weapon_1">
-            <option value="nothing" selected>選択してください</option>
-            <option value="gun">ハンドガン</option>
-            <option value="hammer">ハンマー</option>
-            <option value="photonblaster">フォトンブラスター</option>
-            <option value="baseball_bat">バット</option>
-        </select>
+    <div style="color: aliceblue;"></div>
+    
+    <div class="select-box">
+        <div class="select-set">
+            <label for="weapon_1">一つ目の武器</label>
+            <select name="select_weapon_1" id="weapon_1">
+                <option value="nothing" selected>選択してください</option>
+                <option value="gun">ハンドガン</option>
+                <option value="hammer">ハンマー</option>
+                <option value="photonblaster">フォトンブラスター</option>
+                <option value="baseball_bat">バット</option>
+            </select>
+        </div>
+
+        <div class="select-set">
+            <label for="weapon_2">2つ目の武器</label>
+            <select name="select_weapon_2" id="weapon_2">
+                <option value="nothing" selected>選択してください</option>
+                <option value="gun">ハンドガン</option>
+                <option value="hammer">ハンマー</option>
+                <option value="photonblaster">フォトンブラスター</option>
+                <option value="baseball_bat">バット</option>
+            </select>
+        </div>
+
+        <div class="select-set">
+            <label for="weapon_3">三つ目の武器</label>
+            <select name="select_weapon_3" id="weapon_3">
+                <option value="nothing" selected>選択してください</option>
+                <option value="gun">ハンドガン</option>
+                <option value="hammer">ハンマー</option>
+                <option value="photonblaster">フォトンブラスター</option>
+                <option value="baseball_bat">バット</option>
+            </select>
+        </div>
+            
     </div>
 
     <script>
