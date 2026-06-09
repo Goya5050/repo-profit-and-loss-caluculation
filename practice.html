@@ -74,6 +74,7 @@
 
         .select-box{
             display: flex;
+            width: auto;
 
             padding: 1rem;
             gap: 4px;
@@ -82,11 +83,10 @@
         }
 
         .select-set{
-            width: 34%;
+            width: 33%;
             flex-direction: column;
             flex-wrap: wrap;
-                
-            padding: 1rem;
+        
             gap: 4px;
         }
         
@@ -136,7 +136,7 @@
     
     <div class="select-box">
         <div class="select-set">
-            <label for="weapon_1">一つ目の武器</label>
+            <label for="weapon_1">1つ目の武器</label>
             <select name="select_weapon_1" id="weapon_1">
                 <option value="nothing" selected>選択してください</option>
                 <option value="gun">ハンドガン</option>
@@ -144,6 +144,7 @@
                 <option value="photonblaster">フォトンブラスター</option>
                 <option value="baseball_bat">バット</option>
             </select>
+            <button onchange="getSelectedText()">選択された文字列を取得</button>
         </div>
 
         <div class="select-set">
@@ -158,7 +159,7 @@
         </div>
 
         <div class="select-set">
-            <label for="weapon_3">三つ目の武器</label>
+            <label for="weapon_3">3つ目の武器</label>
             <select name="select_weapon_3" id="weapon_3">
                 <option value="nothing" selected>選択してください</option>
                 <option value="gun">ハンドガン</option>
@@ -166,11 +167,21 @@
                 <option value="photonblaster">フォトンブラスター</option>
                 <option value="baseball_bat">バット</option>
             </select>
-        </div>
-            
+        </div>   
     </div>
 
     <script>
+        function getselect(){
+            const select_weapon = document.getElementById('weapon_1');
+
+            const selectindex = selectElement.selectindex;
+
+            const text = selectElement.option[selectindex].text;
+
+            const value = select_weapon.value;
+
+            alert("選択された文字列は：「" + text + "」\n");
+        }
 
 
 
