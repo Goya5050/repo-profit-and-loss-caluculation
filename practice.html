@@ -131,8 +131,10 @@
     <div class="input-container">
         <input type="text" id="start-level" placeholder="初期レベルの設定">
         <input type="text" id="level-counter" placeholder="試行回数の設定">
+    
     </div>
-    <div style="color: aliceblue;"></div>
+    <button onclick="sum('start-level','level-counter')" style="color: chocolate; font-family: sans-serif;">入力の和を計算</button>
+    <div id="simulation-time" style="color:white; font-size:20px;"></div>
     
     <div class="select-box">
         <div class="select-set">
@@ -144,7 +146,6 @@
                 <option value="photonblaster">フォトンブラスター</option>
                 <option value="baseball_bat">バット</option>
             </select>
-            <button onchange="getSelectedText()">選択された文字列を取得</button>
         </div>
 
         <div class="select-set">
@@ -172,16 +173,24 @@
 
     <script>
         
-        function getselect(select_weapon){
-            const select_weapon = document.getElementById(select_weapon);
+        function getselect(select_weapon_id){
+            const selectElement = document.getElementById(select_weapon_id);
 
             const selectindex = selectElement.selectindex;
 
             const text = selectElement.option[selectindex].text;
 
-            const value = select_weapon.value;
+            const value = selectElement.value;
 
             alert("選択された文字列は：「" + text + "」\n");
+        }
+
+        function sum(start,count){
+            const num1 = parseFloat(document.getElementById(start).value);
+            const num2 = parseFloat(document.getElementById(count).value);
+
+
+            document.getElementById('simulation-time').textContent=num1+num2;
         }
 
 
