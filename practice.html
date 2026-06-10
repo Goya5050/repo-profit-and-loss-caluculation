@@ -136,7 +136,7 @@
     
     <div class="select-box">
         <div class="select-set">
-            <label for="weapon_1">1つ目の武器</label>
+            <label>1つ目の武器</label>
             <select name="select_weapon_1" id="weapon_1">
                 <option value="nothing" selected>選択してください</option>
                 <option value="gun">ハンドガン</option>
@@ -148,7 +148,7 @@
         </div>
 
         <div class="select-set">
-            <label for="weapon_2">2つ目の武器</label>
+            <label>2つ目の武器</label>
             <select name="select_weapon_2" id="weapon_2">
                 <option value="nothing" selected>選択してください</option>
                 <option value="gun">ハンドガン</option>
@@ -159,7 +159,7 @@
         </div>
 
         <div class="select-set">
-            <label for="weapon_3">3つ目の武器</label>
+            <label>3つ目の武器</label>
             <select name="select_weapon_3" id="weapon_3">
                 <option value="nothing" selected>選択してください</option>
                 <option value="gun">ハンドガン</option>
@@ -171,8 +171,9 @@
     </div>
 
     <script>
-        function getselect(){
-            const select_weapon = document.getElementById('weapon_1');
+        
+        function getselect(select_weapon){
+            const select_weapon = document.getElementById(select_weapon);
 
             const selectindex = selectElement.selectindex;
 
