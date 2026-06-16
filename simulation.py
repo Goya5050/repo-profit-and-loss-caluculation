@@ -24,13 +24,14 @@ class Monster:
     cost : int
     orb : int
     
-all_weapons = [
+"""all_weapons = [
     Weapon("Sledge Hammer",10,150,40),
     Weapon("Frying Pan",15,15,12),
     Weapon("Baseball Bat",20,20,15),
     Weapon("Hand Gun",20,80,20),
     Weapon("Photon Blaster",8,225,40)
-]
+]"""
+
 """all_enemies = [
     Monster("Robe",250,3,1),
     Monster("Trudge",500,3,1),
@@ -44,7 +45,7 @@ all_weapons = [
     Monster("Gnome",65,1,0)
 ]"""
 
-def spawning(fname):
+def spawning_rule(fname):
     with open(fname, encoding="utf-8" ) as f:
         data = None
         for i ,row in enumerate(csv.reader(f),start=1):
@@ -60,13 +61,36 @@ def spawning(fname):
 
     return enemy
 
+def spawn(cost1,cost2,cost3):
+    for i in range(cost1):
+        enemy=spawning_rule(fm1)
+        print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
+        if enemy.orb == 1:
+            print("出現する")
+        else:
+            print("出現しない")
+    for i in range(cost2):
+        enemy=spawning_rule(fm2)
+        print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
+        if enemy.orb == 1:
+            print("出現する")
+        else:
+            print("出現しない")
+    for i in range(cost3):
+        enemy=spawning_rule(fm3)
+        print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
+        if enemy.orb == 1:
+            print("出現する")
+        else:
+            print("出現しない")
+
 def optimizing(A,B,C,h,a,b,c):
     
     prob = pulp.LpProblem("efficient_attack_method",pulp.LpMinimize)
 
-    x=pulp.LpProblem("x",lowBound=0,cat="Integer")
-    y=pulp.LpProblem("y",lowBound=0,cat="Integer")
-    z=pulp.LpProblem("z",lowBound=0,cat="Integer")
+    x=pulp.LpVariable("x",lowBound=0,cat="Integer")
+    y=pulp.LpVariable("y",lowBound=0,cat="Integer")
+    z=pulp.LpVariable("z",lowBound=0,cat="Integer")
 
     prob += a*x+b*y+c*z , "Objective"
 
@@ -85,7 +109,7 @@ def optimizing(A,B,C,h,a,b,c):
         print(f"  x = {xv}")
         print(f"  y = {yv}")
         print(f"  z = {zv}")
-        print(f"  目的関数値 (ax+by+cz) = {int(prob.objective.value())}")
+        print(f"  目的関数値 (ax+by+cz) = {float(prob.objective.value())}")
         print(f"  制約確認 (Ax+By+Cz)  = {A*xv + B*yv + C*zv} >= {h}")
     else:
         print("最適解が見つかりませんでした。")
@@ -124,27 +148,10 @@ fm2 = "MonsterList_tire2.csv"
 fm3 = "MonsterList_tire3.csv"
 
 print(f"レベルは{current.level}です")
-for i in range(current.cost1):
-    enemy=spawning(fm1)
-    print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
-    if enemy.orb == 1:
-        print("出現する")
-    else:
-        print("出現しない")
-for i in range(current.cost2):
-    enemy=spawning(fm2)
-    print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
-    if enemy.orb == 1:
-        print("出現する")
-    else:
-        print("出現しない")
-for i in range(current.cost3):
-    enemy=spawning(fm3)
-    print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
-    if enemy.orb == 1:
-        print("出現する")
-    else:
-        print("出現しない")
+
+##spawn(current.cost1,current.cost2,current.cost3)
+
+optimizing(270,800,0,250,1/5,1/5,1/10)
 
     
 
