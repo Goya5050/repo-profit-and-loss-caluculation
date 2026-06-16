@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import random
 import csv
-import linecache
+import pulp
 
 @dataclass
 class Weapon:
@@ -59,6 +59,37 @@ def spawning(fname):
     )
 
     return enemy
+
+def optimizing(A,B,C,h,a,b,c):
+    
+    prob = pulp.LpProblem("efficient_attack_method",pulp.LpMinimize)
+
+    x=pulp.LpProblem("x",lowBound=0,cat="Integer")
+    y=pulp.LpProblem("y",lowBound=0,cat="Integer")
+    z=pulp.LpProblem("z",lowBound=0,cat="Integer")
+
+    prob += a*x+b*y+c*z , "Objective"
+
+    prob += A*x+B*y+C*z >= h , "Constraint"
+
+    status = prob.solve(pulp.PULP_CBC_CMD(msg=0))
+    xv, yv, zv = int(x.value()), int(y.value()), int(z.value())
+    
+
+    print("=" * 40)
+    print(f"ステータス: {pulp.LpStatus[status]}")
+    print("=" * 40)
+    
+    if pulp.LpStatus[status] == "Optimal":
+        xv, yv, zv = int(x.value()), int(y.value()), int(z.value())
+        print(f"  x = {xv}")
+        print(f"  y = {yv}")
+        print(f"  z = {zv}")
+        print(f"  目的関数値 (ax+by+cz) = {int(prob.objective.value())}")
+        print(f"  制約確認 (Ax+By+Cz)  = {A*xv + B*yv + C*zv} >= {h}")
+    else:
+        print("最適解が見つかりませんでした。")
+
 
 
 

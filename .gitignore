@@ -1,0 +1,5 @@
+# .gitignore というファイルの中に以下を記述
+.venv/
+venv/
+__pycache__/
+*.pyc
