@@ -46,6 +46,23 @@ class Monster:
 ]"""
 
 def spawning_rule(fname):
+    with open(fname, encoding="utf-8") as f:
+        levelsets = list(csv.reader(f))
+
+        levelset = levelsets[simulation_level-1]
+
+        current_rule = Levelset(
+            level=simulation_level,
+            cost1=int(levelset[0]),
+            cost2=int(levelset[1]),
+            cost3=int(levelset[2])
+        )
+
+    return current_rule
+
+
+
+def spawning_monster(fname):
     with open(fname, encoding="utf-8" ) as f:
         data = None
         for i ,row in enumerate(csv.reader(f),start=1):
@@ -61,28 +78,75 @@ def spawning_rule(fname):
 
     return enemy
 
+def orb_generation(cost,orb):
+    if orb == 0:
+        return 0
+    match cost:
+        case 1: 
+            profit = random.randrange(2000,3001,100)
+        case 2:
+            profit = random.randrange(3500,4501,100)
+        case 3:
+            profit = random.randrange(5500,7501,100)
+    
+    return profit
+
+def profit_calculation(monster_list):
+    all_profits = 0
+    phase_profit = [0,0,0]
+    while monster_list:
+        monster = monster_list.pop()
+        for i in range(3):
+            phase_profit[i]+=orb_generation(monster.cost,monster.orb)
+
+    all_profits = phase_profit[0]+phase_profit[1]+phase_profit[2]
+
+    print(f"1フェーズ目の収益は${phase_profit[0]}K")
+    print(f"2フェーズ目の収益は${phase_profit[1]}K")
+    print(f"3フェーズ目の収益は${phase_profit[2]}K")
+    print(f"全収益は${all_profits}K")
+
+
+   
+
+
+
 def spawn(cost1,cost2,cost3):
-    for i in range(cost1):
-        enemy=spawning_rule(fm1)
+    all_profits = 0
+    Phase_profits = 0
+    floor_monsters: list[Monster] = []
+    for _ in range(cost1):
+        enemy=spawning_monster(fm1)
+        floor_monsters.append(enemy)
         print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
         if enemy.orb == 1:
             print("出現する")
+            ##Phase_profits,all_profits+=profit_cal(enemy.cost)
         else:
             print("出現しない")
-    for i in range(cost2):
-        enemy=spawning_rule(fm2)
+
+    for _ in range(cost2):
+        enemy=spawning_monster(fm2)
+        floor_monsters.append(enemy)
         print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
         if enemy.orb == 1:
             print("出現する")
+            ##Phase_profits,all_profits+=profit_cal(enemy.cost)
         else:
             print("出現しない")
-    for i in range(cost3):
-        enemy=spawning_rule(fm3)
+
+    for _ in range(cost3):
+        enemy=spawning_monster(fm3)
+        floor_monsters.append(enemy)
         print(f"{enemy.name}の体力は{enemy.health}であり、ティアは{enemy.cost}、オーブは",end="")
         if enemy.orb == 1:
             print("出現する")
+            ##Phase_profits,all_profits+=profit_cal(enemy.cost)
         else:
             print("出現しない")
+    
+    return floor_monsters
+    
 
 def optimizing(A,B,C,h,a,b,c):
     
@@ -116,6 +180,10 @@ def optimizing(A,B,C,h,a,b,c):
 
 
 
+fm1 = "MonsterList_tire1.csv"
+fm2 = "MonsterList_tire2.csv"
+fm3 = "MonsterList_tire3.csv"
+
 
 print("どのレベルをプレイしたいですか？\n")
 simulation_level = int(input())
@@ -124,34 +192,16 @@ if simulation_level >= 20:
 if simulation_level < 0:
     print("0にセットされました\n")
 
-
 """print("どのくらいやりますか？")
 simulation_time = int(input())"""
 
-
-
-with open("levelList.csv", encoding="utf-8") as f:
-    levelsets = list(csv.reader(f))
-
-levelset = levelsets[simulation_level-1]
-
-current = Levelset(
-    level=simulation_level,
-    cost1=int(levelset[0]),
-    cost2=int(levelset[1]),
-    cost3=int(levelset[2])
-)
-
-
-fm1 = "MonsterList_tire1.csv"
-fm2 = "MonsterList_tire2.csv"
-fm3 = "MonsterList_tire3.csv"
+current = spawning_rule("LevelList.csv")
 
 print(f"レベルは{current.level}です")
 
-##spawn(current.cost1,current.cost2,current.cost3)
-
-optimizing(270,800,0,250,1/5,1/5,1/10)
+monster_ls = spawn(current.cost1,current.cost2,current.cost3)
+profit_calculation(monster_ls)
+##optimizing(270,800,0,250,1/5,1/5,1/10)
 
     
 
