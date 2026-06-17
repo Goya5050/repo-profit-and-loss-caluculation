@@ -23,7 +23,21 @@ class Monster:
     health : int
     cost : int
     orb : int
+
+@dataclass
+class Weapon_info:
+    name: str
+    damage: int
+    mincost: int
+    maxcost: int
+    energy: int
     
+@dataclass
+class Weapons:
+    w1 : Weapon_info
+    w2 : Weapon_info
+    w3 : Weapon_info
+
 """all_weapons = [
     Weapon("Sledge Hammer",10,150,40),
     Weapon("Frying Pan",15,15,12),
@@ -60,6 +74,27 @@ def spawning_rule(fname):
 
     return current_rule
 
+def search_weapon(fname,w1,w2,w3):
+
+    with open(fname,newline="",encoding="utf-8")as f:
+
+        selected_weapon_list = []
+        reader = csv.DictReader(f)
+        for row in reader :
+            if(row == w1)or(row == w2)or(row == w3):
+                ##js側で被らないように設定しておく
+                weapon = Weapon_info(
+                    name = row["name"],
+                    damage=row["damage"],
+                    mincost=row["mincost"],
+                    maxcost=row["maxcost"],
+                    energy=row["energy"]
+                )
+
+                selected_weapon_list.append(weapon)
+
+    
+    return selected_weapon_list
 
 
 def spawning_monster(fname):
@@ -107,8 +142,11 @@ def profit_calculation(monster_list):
     print(f"全収益は${all_profits}K")
 
 
-   
-
+def energy_calc(monster_list):
+    while monster_list:
+        monster = monster_list.pop()
+        
+    
 
 
 def spawn(cost1,cost2,cost3):
@@ -178,29 +216,27 @@ def optimizing(A,B,C,h,a,b,c):
     else:
         print("最適解が見つかりませんでした。")
 
-
-
 fm1 = "MonsterList_tire1.csv"
 fm2 = "MonsterList_tire2.csv"
 fm3 = "MonsterList_tire3.csv"
 
-
 print("どのレベルをプレイしたいですか？\n")
+
 simulation_level = int(input())
+
 if simulation_level >= 20:
     print("最高難易度にセットされました\n")
 if simulation_level < 0:
     print("0にセットされました\n")
 
-"""print("どのくらいやりますか？")
-simulation_time = int(input())"""
+currentlv = spawning_rule("LevelList.csv")
 
-current = spawning_rule("LevelList.csv")
+print(f"レベルは{currentlv.level}です")
 
-print(f"レベルは{current.level}です")
+monster_ls = spawn(currentlv.cost1,currentlv.cost2,currentlv.cost3)
 
-monster_ls = spawn(current.cost1,current.cost2,current.cost3)
 profit_calculation(monster_ls)
+
 ##optimizing(270,800,0,250,1/5,1/5,1/10)
 
     
