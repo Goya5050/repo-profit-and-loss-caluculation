@@ -123,7 +123,15 @@ def orb_generation(cost,orb):
             profit = random.randrange(3500,4501,100)
         case 3:
             profit = random.randrange(5500,7501,100)
-    
+    luck = random.randint(1,10)
+    if(luck == 1):
+        print(f"${profit}Kのオーブが壊れました")
+        profit = 0
+    elif(luck == 2)or(luck == 3):
+        print(f"${profit}Kのオーブが傷つきました")
+        profit = profit/2
+        
+
     return profit
 
 def profit_calculation(monster_list):
@@ -135,11 +143,13 @@ def profit_calculation(monster_list):
             phase_profit[i]+=orb_generation(monster.cost,monster.orb)
 
     all_profits = phase_profit[0]+phase_profit[1]+phase_profit[2]
+    phase2_profits = phase_profit[0]+phase_profit[1]
 
     print(f"1フェーズ目の収益は${phase_profit[0]}K")
     print(f"2フェーズ目の収益は${phase_profit[1]}K")
     print(f"3フェーズ目の収益は${phase_profit[2]}K")
-    print(f"全収益は${all_profits}K")
+    print("----------------------------------------")
+    print(f"全収益は${all_profits}K 2フェーズまでの収益は${phase2_profits}K ")
 
 
 def energy_calc(monster_list):
