@@ -40,26 +40,6 @@ class Weapons:
     w2 : Weapon_info
     w3 : Weapon_info
 
-"""all_weapons = [
-    Weapon("Sledge Hammer",10,150,40),
-    Weapon("Frying Pan",15,15,12),
-    Weapon("Baseball Bat",20,20,15),
-    Weapon("Hand Gun",20,80,20),
-    Weapon("Photon Blaster",8,225,40)
-]"""
-
-"""all_enemies = [
-    Monster("Robe",250,3,1),
-    Monster("Trudge",500,3,1),
-    Monster("Clown",250,3,1),
-    Monster("Ragrat",150,2,1),
-    Monster("Hidden",150,2,1),
-    Monster("Cheff",150,2,1),
-    Monster("Banger",80,2,0),
-    Monster("spewer",65,1,1),
-    Monster("Shadow Child",150,1,1),
-    Monster("Gnome",65,1,0)
-]"""
 
 def spawning_rule(fname):
     with open(fname, encoding="utf-8") as f:
@@ -133,8 +113,11 @@ def orb_generation(cost,orb):
         print(f"${profit}Kのオーブが傷つきました")
         profit = profit/2
         
-
     return profit
+
+##def crystal_generation(level):
+    ##購入後、未購入後の価格変動の調査
+    ##複数人いるときの価格変動について調べる
 
 def profit_calculation(monster_list):
     all_profits = 0
@@ -153,6 +136,8 @@ def profit_calculation(monster_list):
     print("----------------------------------------")
     print(f"全収益は${all_profits} 2フェーズまでの収益は${phase2_profits} ")
 
+    return phase_profit
+
 
 def energy_calc(monster_list,weapon_list):
     weapon_1 = weapon_list.pop()
@@ -167,6 +152,8 @@ def energy_calc(monster_list,weapon_list):
         energy_loss += usage
         print(f"{monster.name}を倒すのに{usage}エネルギーを使いました")
     print(f"消費したエネルギーは{energy_loss}です。")
+
+    return math.ceil(energy_loss)
 
 
 def spawn(cost1,cost2,cost3):
@@ -238,6 +225,8 @@ def optimizing(A,B,C,h,a,b,c):
         print("最適解が見つかりませんでした。")
         return 0.0
 
+"""main"""
+
 fm1 = "MonsterList_tire1.csv"
 fm2 = "MonsterList_tire2.csv"
 fm3 = "MonsterList_tire3.csv"
@@ -248,26 +237,17 @@ print("どのレベルをプレイしたいですか？\n")
 simulation_level = int(input())
 
 if simulation_level >= 20:
+    simulation_level=20
     print("最高難易度にセットされました\n")
 if simulation_level < 0:
+    simulation_level=0
     print("0にセットされました\n")
 
 currentlv = spawning_rule("LevelList.csv")
 
-print(f"レベルは{currentlv.level}です")
-
 monster_ls = spawn(currentlv.cost1,currentlv.cost2,currentlv.cost3)
 weapon_ls = search_weapon(fw,"HandGun","KartCannon","SledgeHammer")
-profit_calculation(copy.copy(monster_ls))
-energy_calc(monster_ls,weapon_ls)
+profit_list = profit_calculation(copy.copy(monster_ls))
+cry_num = energy_calc(monster_ls,weapon_ls)
 
 ##optimizing(270,800,0,250,1/5,1/5,1/10)
-
-    
-
-
-        
-
-
-
-
