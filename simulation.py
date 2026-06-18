@@ -2,6 +2,8 @@ from dataclasses import dataclass
 import random
 import csv
 import pulp
+import copy
+import math
 
 @dataclass
 class Weapon:
@@ -81,14 +83,14 @@ def search_weapon(fname,w1,w2,w3):
         selected_weapon_list = []
         reader = csv.DictReader(f)
         for row in reader :
-            if(row == w1)or(row == w2)or(row == w3):
+            if row["name"] == w1 or row["name"] == w2 or row["name"] == w3:
                 ##js側で被らないように設定しておく
                 weapon = Weapon_info(
                     name = row["name"],
-                    damage=row["damage"],
-                    mincost=row["mincost"],
-                    maxcost=row["maxcost"],
-                    energy=row["energy"]
+                    damage=int(row["damage"]),
+                    mincost=int(row["mincost"]),
+                    maxcost=int(row["maxcost"]),
+                    energy=int(row["energy"])
                 )
 
                 selected_weapon_list.append(weapon)
@@ -145,23 +147,30 @@ def profit_calculation(monster_list):
     all_profits = phase_profit[0]+phase_profit[1]+phase_profit[2]
     phase2_profits = phase_profit[0]+phase_profit[1]
 
-    print(f"1フェーズ目の収益は${phase_profit[0]}K")
-    print(f"2フェーズ目の収益は${phase_profit[1]}K")
-    print(f"3フェーズ目の収益は${phase_profit[2]}K")
+    print(f"1フェーズ目の収益は${phase_profit[0]}")
+    print(f"2フェーズ目の収益は${phase_profit[1]}")
+    print(f"3フェーズ目の収益は${phase_profit[2]}")
     print("----------------------------------------")
-    print(f"全収益は${all_profits}K 2フェーズまでの収益は${phase2_profits}K ")
+    print(f"全収益は${all_profits} 2フェーズまでの収益は${phase2_profits} ")
 
 
-def energy_calc(monster_list):
+def energy_calc(monster_list,weapon_list):
+    weapon_1 = weapon_list.pop()
+    weapon_2 = weapon_list.pop()
+    weapon_3 = weapon_list.pop()
+    energy_loss = 0.0
+
     while monster_list:
+        usage = 0.0
         monster = monster_list.pop()
-        
-    
+        usage = math.ceil(optimizing(weapon_1.damage,weapon_2.damage,weapon_3.damage,monster.health,1/weapon_1.energy,1/weapon_2.energy,1/weapon_3.energy)*100)/100
+        energy_loss += usage
+        print(f"{monster.name}を倒すのに{usage}エネルギーを使いました")
+    print(f"消費したエネルギーは{energy_loss}です。")
 
 
 def spawn(cost1,cost2,cost3):
-    all_profits = 0
-    Phase_profits = 0
+
     floor_monsters: list[Monster] = []
     for _ in range(cost1):
         enemy=spawning_monster(fm1)
@@ -221,14 +230,18 @@ def optimizing(A,B,C,h,a,b,c):
         print(f"  x = {xv}")
         print(f"  y = {yv}")
         print(f"  z = {zv}")
-        print(f"  目的関数値 (ax+by+cz) = {float(prob.objective.value())}")
+        energy_loss = float(prob.objective.value())
+        print(f"  目的関数値 (ax+by+cz) = {energy_loss}")
         print(f"  制約確認 (Ax+By+Cz)  = {A*xv + B*yv + C*zv} >= {h}")
+        return energy_loss
     else:
         print("最適解が見つかりませんでした。")
+        return 0.0
 
 fm1 = "MonsterList_tire1.csv"
 fm2 = "MonsterList_tire2.csv"
 fm3 = "MonsterList_tire3.csv"
+fw = "WeaponList.csv"
 
 print("どのレベルをプレイしたいですか？\n")
 
@@ -244,8 +257,9 @@ currentlv = spawning_rule("LevelList.csv")
 print(f"レベルは{currentlv.level}です")
 
 monster_ls = spawn(currentlv.cost1,currentlv.cost2,currentlv.cost3)
-
-profit_calculation(monster_ls)
+weapon_ls = search_weapon(fw,"HandGun","KartCannon","SledgeHammer")
+profit_calculation(copy.copy(monster_ls))
+energy_calc(monster_ls,weapon_ls)
 
 ##optimizing(270,800,0,250,1/5,1/5,1/10)
 

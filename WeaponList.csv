@@ -1,12 +1,12 @@
 name,damage,mincost,maxcost,energy
-baseball bat,40,38,48,10
-frying pan,18,15,17,15
-Sledge Hammer,150,40,47,10
-sword,50,19,20,15
-prodzap,8,24,30,16
-handgun,80,19,20,15
-shotgun,300,48,39,5
-Photon Blaster,270,39,48,5
-boltzap,33,,15,18,20
-kartCannon,500,39,48,5
-kartLazer,800,35,48,5
+BaseBall bat,40,38,48,10
+FryingPan,18,15,17,15
+SledgeHammer,150,40,47,10
+Sword,50,19,20,15
+ProdZap,8,24,30,16
+HandGun,80,19,20,15
+ShotGun,300,48,39,5
+PhotonBlaster,270,39,48,5
+BoltZap,33,15,18,20
+KartCannon,500,39,48,5
+KartLazer,800,35,48,5
