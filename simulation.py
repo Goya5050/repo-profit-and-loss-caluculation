@@ -5,6 +5,16 @@ import pulp
 import copy
 import math
 
+fm1 = "MonsterList_tire1.csv"
+fm2 = "MonsterList_tire2.csv"
+fm3 = "MonsterList_tire3.csv"
+fw = "WeaponList.csv"
+fc = "CrystalCostList.csv"
+
+weapon_1 = "prodzap"
+weapon_2 = "boltzap"
+weapon_3 = "fryingpan"
+
 @dataclass
 class Weapon:
     name: str
@@ -56,29 +66,6 @@ def spawning_rule(fname):
 
     return current_rule
 
-def search_weapon(fname,w1,w2,w3):
-
-    with open(fname,newline="",encoding="utf-8")as f:
-
-        selected_weapon_list = []
-        reader = csv.DictReader(f)
-        for row in reader :
-            if row["name"] == w1 or row["name"] == w2 or row["name"] == w3:
-                ##js側で被らないように設定しておく
-                weapon = Weapon_info(
-                    name = row["name"],
-                    damage=int(row["damage"]),
-                    mincost=int(row["mincost"]),
-                    maxcost=int(row["maxcost"]),
-                    energy=int(row["energy"])
-                )
-
-                selected_weapon_list.append(weapon)
-
-    
-    return selected_weapon_list
-
-
 def spawning_monster(fname):
     with open(fname, encoding="utf-8" ) as f:
         data = None
@@ -94,67 +81,6 @@ def spawning_monster(fname):
     )
 
     return enemy
-
-def orb_generation(cost,orb):
-    if orb == 0:
-        return 0
-    match cost:
-        case 1: 
-            profit = random.randrange(2000,3001,100)
-        case 2:
-            profit = random.randrange(3500,4501,100)
-        case 3:
-            profit = random.randrange(5500,7501,100)
-    luck = random.randint(1,10)
-    if(luck == 1):
-        print(f"${profit}Kのオーブが壊れました")
-        profit = 0
-    elif(luck == 2)or(luck == 3):
-        print(f"${profit}Kのオーブが傷つきました")
-        profit = profit/2
-        
-    return profit
-
-##def crystal_generation(level):
-    ##購入後、未購入後の価格変動の調査
-    ##複数人いるときの価格変動について調べる
-
-def profit_calculation(monster_list):
-    all_profits = 0
-    phase_profit = [0,0,0]
-    while monster_list:
-        monster = monster_list.pop()
-        for i in range(3):
-            phase_profit[i]+=orb_generation(monster.cost,monster.orb)
-
-    all_profits = phase_profit[0]+phase_profit[1]+phase_profit[2]
-    phase2_profits = phase_profit[0]+phase_profit[1]
-
-    print(f"1フェーズ目の収益は${phase_profit[0]}")
-    print(f"2フェーズ目の収益は${phase_profit[1]}")
-    print(f"3フェーズ目の収益は${phase_profit[2]}")
-    print("----------------------------------------")
-    print(f"全収益は${all_profits} 2フェーズまでの収益は${phase2_profits} ")
-
-    return phase_profit
-
-
-def energy_calc(monster_list,weapon_list):
-    weapon_1 = weapon_list.pop()
-    weapon_2 = weapon_list.pop()
-    weapon_3 = weapon_list.pop()
-    energy_loss = 0.0
-
-    while monster_list:
-        usage = 0.0
-        monster = monster_list.pop()
-        usage = math.ceil(optimizing(weapon_1.damage,weapon_2.damage,weapon_3.damage,monster.health,1/weapon_1.energy,1/weapon_2.energy,1/weapon_3.energy)*100)/100
-        energy_loss += usage
-        print(f"{monster.name}を倒すのに{usage}エネルギーを使いました")
-    print(f"消費したエネルギーは{energy_loss}です。")
-
-    return math.ceil(energy_loss)
-
 
 def spawn(cost1,cost2,cost3):
 
@@ -190,7 +116,116 @@ def spawn(cost1,cost2,cost3):
             print("出現しない")
     
     return floor_monsters
+
+def search_weapon(fname,w1,w2,w3):
+
+    with open(fname,newline="",encoding="utf-8")as f:
+
+        selected_weapon_list = []
+        reader = csv.DictReader(f)
+        for row in reader :
+            if row["name"].lower() == w1.lower() or row["name"].lower() == w2.lower() or row["name"].lower() == w3.lower():
+                ##js側で被らないように設定しておく
+                weapon = Weapon_info(
+                    name = row["name"],
+                    damage=int(row["damage"]),
+                    mincost=int(row["mincost"]),
+                    maxcost=int(row["maxcost"]),
+                    energy=int(row["energy"])
+                )
+
+                selected_weapon_list.append(weapon)
+
     
+    return selected_weapon_list
+
+def orb_generation(cost,name,orb,count):
+    if orb == 0:
+        return 0
+    match cost:
+        case 1: 
+            profit = random.randrange(2000,3001,100)
+        case 2:
+            profit = random.randrange(3500,4501,100)
+        case 3:
+            profit = random.randrange(5500,7501,100)
+    """luck = random.randint(1,10)
+    if(luck == 1):
+        print(f"{name}の${profit}Kのオーブが壊れました")
+        profit = 0
+    elif(luck == 2)or(luck == 3):
+        print(f"{name}の${profit}Kのオーブが傷つきました")
+        profit = profit/2"""
+        
+    return profit
+
+def profit_calculation(monster_list):
+    phase_profits = 0
+    profits_list = [0,0,0]
+    
+    for i in range(3):
+        print("=========================================")
+        print(f"{i+1}フェーズの戦滅報酬")
+        for monster in monster_list:
+            phase_profits += orb_generation(monster.cost,monster.name,monster.orb,i+1)
+        
+        profits_list[i] = phase_profits
+        print("-----------------------------------------")
+        print(f"{i+1}フェーズ目までの収益${profits_list[i]}")
+    
+    print("==========================================")
+
+    return profits_list
+
+def energy_calc(monster_list,weapon_list):
+    weapon_1 = weapon_list.pop()
+    weapon_2 = weapon_list.pop()
+    weapon_3 = weapon_list.pop()
+    energy_loss = 0.0
+
+    while monster_list:
+        usage = 0.0
+        monster = monster_list.pop()
+        usage = math.ceil(optimizing(weapon_1.damage,weapon_2.damage,weapon_3.damage,monster.health,1/weapon_1.energy,1/weapon_2.energy,1/weapon_3.energy)*100)/100
+        energy_loss += usage
+        print(f"{monster.name}を倒すのに{usage}エネルギーを使いました")
+    print(f"フェーズ1ごと消費エネルギーは{energy_loss}です。")
+
+    return energy_loss
+
+def loss_calc(fname,level,energyloss):
+    
+    if(level>=20):
+        level = 19
+        
+    with open(fname,encoding="utf-8")as f:
+        crylst = list(csv.reader(f))
+        crysct = crylst[level]
+        cost_list = [0,0,0]
+        shop_list = [0,0,0,0,0]
+        
+        for i in range(5):
+            if random.randint(1,10) <= 5:
+                shop_list[i] = int(crysct[1])
+            else:
+                shop_list[i] = int(crysct[2])
+        shop_list = sorted(shop_list, reverse=True)
+        print(shop_list)
+        
+    for i in range(3):
+        copy_list = copy.copy(shop_list)
+        for j in range((round(energyloss * (i+1)))):
+            cost_list[i] += 1000*int(copy_list.pop())
+            
+            if not copy_list:
+                for j in range(round(energyloss * (i+1))-j):
+                    print("品切れしたため、追加購入しました")
+                    cost_list[i] += int(crysct[2])
+                break
+    
+    return cost_list
+
+
 
 def optimizing(A,B,C,h,a,b,c):
     
@@ -227,11 +262,6 @@ def optimizing(A,B,C,h,a,b,c):
 
 """main"""
 
-fm1 = "MonsterList_tire1.csv"
-fm2 = "MonsterList_tire2.csv"
-fm3 = "MonsterList_tire3.csv"
-fw = "WeaponList.csv"
-
 print("どのレベルをプレイしたいですか？\n")
 
 simulation_level = int(input())
@@ -246,8 +276,13 @@ if simulation_level < 0:
 currentlv = spawning_rule("LevelList.csv")
 
 monster_ls = spawn(currentlv.cost1,currentlv.cost2,currentlv.cost3)
-weapon_ls = search_weapon(fw,"HandGun","KartCannon","SledgeHammer")
+weapon_ls = search_weapon(fw,weapon_1,weapon_2,weapon_3)
 profit_list = profit_calculation(copy.copy(monster_ls))
-cry_num = energy_calc(monster_ls,weapon_ls)
+loss_list = loss_calc(fc,currentlv.level,energy_calc(monster_ls,weapon_ls))
 
-##optimizing(270,800,0,250,1/5,1/5,1/10)
+print(f"1フェーズ目の収益:${profit_list[0]}\n2フェーズ目の収益:${profit_list[1]}\n3フェーズ目の収益:${profit_list[2]}")
+print(f"1フェーズの損失:${loss_list[0]}\n2フェーズの損失:${loss_list[1]}\n3フェーズの損失:${loss_list[2]}\n")
+print(f"-------------------------------------------")
+print("損益結果")
+for i in range(3):
+    print(f"フェーズ{i+1}回目までの損益(profit/loss):{profit_list[i]/loss_list[i]}")
