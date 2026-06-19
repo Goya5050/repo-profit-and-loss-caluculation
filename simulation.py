@@ -12,8 +12,8 @@ fw = "WeaponList.csv"
 fc = "CrystalCostList.csv"
 
 weapon_1 = "prodzap"
-weapon_2 = "boltzap"
-weapon_3 = "fryingpan"
+weapon_2 = "fryingpan"
+weapon_3 = "handgun"
 
 @dataclass
 class Weapon:
@@ -156,8 +156,8 @@ def orb_generation(cost,name,orb,count):
     elif(luck == 2)or(luck == 3):
         print(f"{name}の${profit}Kのオーブが傷つきました")
         profit = profit/2
-    else:
-        print(f"{name}の${profit}Kのオーブが無事でした")
+    ##else:
+        ##print(f"{name}の${profit}Kのオーブが無事でした")
         
     return profit
 
@@ -191,6 +191,7 @@ def energy_calc(monster_list,weapon_list):
         usage = math.ceil(optimizing(weapon_1.damage,weapon_2.damage,weapon_3.damage,monster.health,1/weapon_1.energy,1/weapon_2.energy,1/weapon_3.energy)*100)/100
         energy_loss += usage
         print(f"{monster.name}を倒すのに{usage}エネルギーを使いました")
+    print("--------------------------------------------")
     print(f"フェーズ1ごと消費エネルギーは{energy_loss}です。")
 
     return energy_loss
@@ -215,17 +216,18 @@ def loss_calc(fname,level,energyloss):
         print(shop_list)
         
     for i in range(3):
+        print("===========================================")
         print(f"フェーズ{i+1}のクリスタル損失を計算しています…")
         copy_list = copy.copy(shop_list)
-        for j in range((round(energyloss * (i+1)))):
+        for j in range(int(energyloss * (i+1))+1):
             cost_list[i] += 1000*int(copy_list.pop())
-            
+
             if not copy_list:
-                for j in range(round(energyloss * (i+1))-j):
+                for j in range(int(energyloss * (i+1))+1-j):
                     print("品切れしたため、追加購入しました")
                     cost_list[i] += int(crysct[2])
                 break
-    
+    print("===========================================")
     return cost_list
 
 
@@ -246,21 +248,21 @@ def optimizing(A,B,C,h,a,b,c):
     xv, yv, zv = int(x.value()), int(y.value()), int(z.value())
     
 
-    print("=" * 40)
-    print(f"ステータス: {pulp.LpStatus[status]}")
-    print("=" * 40)
+    ##print("=" * 40)
+    ##print(f"ステータス: {pulp.LpStatus[status]}")
+    ##print("=" * 40)
     
     if pulp.LpStatus[status] == "Optimal":
         xv, yv, zv = int(x.value()), int(y.value()), int(z.value())
-        print(f"  x = {xv}")
-        print(f"  y = {yv}")
-        print(f"  z = {zv}")
+        ##print(f"  x = {xv}")
+        ##print(f"  y = {yv}")
+        ##print(f"  z = {zv}")
         energy_loss = float(prob.objective.value())
-        print(f"  目的関数値 (ax+by+cz) = {energy_loss}")
-        print(f"  制約確認 (Ax+By+Cz)  = {A*xv + B*yv + C*zv} >= {h}")
+        ##print(f"  目的関数値 (ax+by+cz) = {energy_loss}")
+        ##print(f"  制約確認 (Ax+By+Cz)  = {A*xv + B*yv + C*zv} >= {h}")
         return energy_loss
     else:
-        print("最適解が見つかりませんでした。")
+        ##print("最適解が見つかりませんでした。")
         return 0.0
 
 """main"""
@@ -283,9 +285,10 @@ weapon_ls = search_weapon(fw,weapon_1,weapon_2,weapon_3)
 profit_list = profit_calculation(copy.copy(monster_ls))
 loss_list = loss_calc(fc,currentlv.level,energy_calc(monster_ls,weapon_ls))
 
-print(f"1フェーズ目の収益:${profit_list[0]}\n2フェーズ目の収益:${profit_list[1]}\n3フェーズ目の収益:${profit_list[2]}")
-print(f"1フェーズの損失:${loss_list[0]}\n2フェーズの損失:${loss_list[1]}\n3フェーズの損失:${loss_list[2]}\n")
+print(f"1フェーズの損失:${loss_list[0]}\n2フェーズの損失:${loss_list[1]}\n3フェーズの損失:${loss_list[2]}")
 print(f"-------------------------------------------")
+print(f"1フェーズ目の収益:${profit_list[0]}\n2フェーズ目の収益:${profit_list[1]}\n3フェーズ目の収益:${profit_list[2]}")
+print(f"============================================")
 print("損益結果")
 for i in range(3):
     print(f"フェーズ{i+1}回目までの損益(profit/loss):{profit_list[i]/loss_list[i]}")
