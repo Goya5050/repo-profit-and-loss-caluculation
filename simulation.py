@@ -149,13 +149,15 @@ def orb_generation(cost,name,orb,count):
             profit = random.randrange(3500,4501,100)
         case 3:
             profit = random.randrange(5500,7501,100)
-    """luck = random.randint(1,10)
+    luck = random.randint(1,10)
     if(luck == 1):
         print(f"{name}の${profit}Kのオーブが壊れました")
         profit = 0
     elif(luck == 2)or(luck == 3):
         print(f"{name}の${profit}Kのオーブが傷つきました")
-        profit = profit/2"""
+        profit = profit/2
+    else:
+        print(f"{name}の${profit}Kのオーブが無事でした")
         
     return profit
 
@@ -213,6 +215,7 @@ def loss_calc(fname,level,energyloss):
         print(shop_list)
         
     for i in range(3):
+        print(f"フェーズ{i+1}のクリスタル損失を計算しています…")
         copy_list = copy.copy(shop_list)
         for j in range((round(energyloss * (i+1)))):
             cost_list[i] += 1000*int(copy_list.pop())
